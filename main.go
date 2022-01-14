@@ -5,7 +5,7 @@ package main
 
 import (
 	"flag"
-	"fmt"
+	"log"
 
 	"github.com/kiptoonkipkurui/urlhealth/files"
 	"github.com/kiptoonkipkurui/urlhealth/httpclient"
@@ -21,7 +21,7 @@ func main() {
 	lines, err := files.Read(*path)
 
 	if err != nil {
-		fmt.Errorf("encountered error", err)
+		log.Fatal(err)
 	}
 
 	var urls []string
@@ -30,7 +30,7 @@ func main() {
 		found, err := processing.GetUrls(line)
 
 		if err != nil {
-			fmt.Errorf("encountered error", err)
+			log.Fatal(err)
 		}
 		urls = append(urls, found...)
 	}
@@ -42,7 +42,7 @@ func main() {
 		err := httpclient.Get(url)
 
 		if err != nil {
-			fmt.Errorf("encountered error %s", err)
+			log.Fatal(err)
 		}
 	}
 }
