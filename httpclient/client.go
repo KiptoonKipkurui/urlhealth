@@ -3,7 +3,10 @@
 //
 package httpclient
 
-import "net/http"
+import (
+	"log"
+	"net/http"
+)
 
 //
 // Get makes a http call and returns if any error is encountered
@@ -11,11 +14,16 @@ import "net/http"
 func Get(url string) error {
 
 	// make http call
-	_, err := http.Get(url)
+
+	log.Printf("making a call to url %s", url)
+	response, err := http.Get(url)
 
 	if err != nil {
+		log.Fatal(err)
 		return err
 	}
+
+	log.Printf("obtained response status %s", response.Status)
 
 	return nil
 }
