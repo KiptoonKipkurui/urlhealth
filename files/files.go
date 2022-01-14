@@ -21,6 +21,7 @@ func Read(path string) ([]string, error) {
 		return nil, os.ErrNotExist
 	}
 
+	log.Printf("opening file %s", path)
 	f, err := os.Open(path)
 
 	if err != nil {
@@ -40,5 +41,6 @@ func Read(path string) ([]string, error) {
 		lines = append(lines, text)
 	}
 
+	log.Println("Done reading file..")
 	return lines, nil
 }
