@@ -9,4 +9,4 @@ With this package as a github action one can get a quick alert whenever a url li
 
 
 
-[click here]: <https://duma.siasareport.com>
+[click here]: <https://dum.siasareport.com>

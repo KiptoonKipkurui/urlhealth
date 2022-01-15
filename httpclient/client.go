@@ -4,6 +4,7 @@
 package httpclient
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 )
@@ -19,7 +20,7 @@ func Get(url string) error {
 	response, err := http.Get(url)
 
 	if err != nil {
-		log.Fatal(err)
+		fmt.Printf("ecountered error %s", err.Error())
 		return err
 	}
 

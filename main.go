@@ -5,7 +5,7 @@ package main
 
 import (
 	"flag"
-	"log"
+	"fmt"
 
 	"github.com/kiptoonkipkurui/urlhealth/files"
 	"github.com/kiptoonkipkurui/urlhealth/httpclient"
@@ -21,7 +21,7 @@ func main() {
 	lines, err := files.Read(*path)
 
 	if err != nil {
-		log.Fatal(err)
+		fmt.Printf("ecountered error %s", err.Error())
 	}
 
 	var urls []string
@@ -30,9 +30,12 @@ func main() {
 		found, err := processing.GetUrls(line)
 
 		if err != nil {
-			log.Fatal(err)
+			fmt.Printf("ecountered error %s", err.Error())
 		}
-		urls = append(urls, found...)
+
+		if len(found) != 0 {
+			urls = append(urls, found...)
+		}
 	}
 
 	// check each url for healthiness
@@ -42,7 +45,7 @@ func main() {
 		err := httpclient.Get(url)
 
 		if err != nil {
-			log.Fatal(err)
+			fmt.Printf("ecountered error %s", err.Error())
 		}
 	}
 }

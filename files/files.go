@@ -5,6 +5,7 @@ package files
 import (
 	"bufio"
 	"errors"
+	"fmt"
 	"log"
 	"os"
 )
@@ -17,7 +18,7 @@ func Read(path string) ([]string, error) {
 	// ensure the file exists
 	if _, err := os.Stat(path); errors.Is(err, os.ErrNotExist) {
 
-		log.Fatal(err)
+		fmt.Printf("ecountered error %s", err.Error())
 		return nil, os.ErrNotExist
 	}
 
@@ -26,7 +27,7 @@ func Read(path string) ([]string, error) {
 
 	if err != nil {
 
-		log.Fatal(err)
+		fmt.Printf("ecountered error %s", err.Error())
 		return nil, err
 	}
 
