@@ -9,7 +9,6 @@ import (
 
 	"github.com/kiptoonkipkurui/urlhealth/files"
 	"github.com/kiptoonkipkurui/urlhealth/httpclient"
-	"github.com/kiptoonkipkurui/urlhealth/processing"
 )
 
 //
@@ -18,34 +17,22 @@ func main() {
 
 	path := flag.String("path", "foo", "path to the readme")
 	flag.Parse()
-	lines, err := files.Read(*path)
+	readmes := make([]files.ReadMe, 0)
+	result, err := files.Discover(*path, readmes)
+
+	fmt.Println(result)
 
 	if err != nil {
 		fmt.Printf("ecountered error %s", err.Error())
 	}
 
-	var urls []string
-	for _, line := range lines {
+	for _, readme := range result {
+		for _, link := range readme.Links {
 
-		found, err := processing.GetUrls(line)
-
-		if err != nil {
-			fmt.Printf("ecountered error %s", err.Error())
-		}
-
-		if len(found) != 0 {
-			urls = append(urls, found...)
-		}
-	}
-
-	// check each url for healthiness
-
-	for _, url := range urls {
-
-		err := httpclient.Get(url)
-
-		if err != nil {
-			fmt.Printf("ecountered error %s", err.Error())
+			err := httpclient.Get(link.Url)
+			if err != nil {
+				fmt.Printf("ecountered error %s for link %s", err.Error(), link.Url)
+			}
 		}
 	}
 }
