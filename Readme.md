@@ -6,6 +6,9 @@ With this package as a github action one can get a quick alert whenever a url li
 
 
 
+## Todo
+- Multiline urls
+- URL aliases/icons
 
 
 
