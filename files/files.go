@@ -8,6 +8,10 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
+	"strings"
+
+	"github.com/kiptoonkipkurui/urlhealth/processing"
 )
 
 //
@@ -44,4 +48,60 @@ func Read(path string) ([]string, error) {
 
 	log.Println("Done reading file..")
 	return lines, nil
+}
+
+type ReadMe struct {
+	Path string
+	Name string
+
+	Links []Link
+}
+
+type Link struct {
+	Url     string
+	Alias   string
+	Healthy bool
+}
+
+//
+// crawls file system to get markdown files
+//
+func Discover(path string, files []ReadMe) ([]ReadMe, error) {
+	filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
+		if !info.IsDir() && isMarkdown(info.Name()) {
+			readme := ReadMe{Path: info.Name(), Name: info.Name(), Links: make([]Link, 0)}
+			lines, err := Read(path)
+
+			if err == nil {
+				for _, line := range lines {
+					urls, _ := processing.GetUrls(line)
+
+					for _, url := range urls {
+						readme.Links = append(readme.Links, Link{Url: url})
+					}
+				}
+			}
+			files = append(files, readme)
+		}
+
+		return nil
+	})
+
+	return files, nil
+}
+
+//
+// checks whether the name has a markdown extension
+//
+func isMarkdown(name string) bool {
+	name = strings.ToLower(name)
+
+	if strings.HasSuffix(name, "md") || strings.HasSuffix(name, "markdown") {
+		return true
+	}
+	return false
 }
