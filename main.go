@@ -6,6 +6,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"sync"
 
 	"github.com/kiptoonkipkurui/urlhealth/files"
 	"github.com/kiptoonkipkurui/urlhealth/httpclient"
@@ -26,13 +27,21 @@ func main() {
 		fmt.Printf("ecountered error %s", err.Error())
 	}
 
+	wg := &sync.WaitGroup{}
 	for _, readme := range result {
 		for _, link := range readme.Links {
+			wg.Add(1)
+			go func(link files.Link, wg *sync.WaitGroup) {
 
-			err := httpclient.Get(link.Url)
-			if err != nil {
-				fmt.Printf("ecountered error %s for link %s", err.Error(), link.Url)
-			}
+				err := httpclient.Get(link.Url, wg)
+				if err != nil {
+					fmt.Printf("ecountered error %s for link %s", err.Error(), link.Url)
+				} else {
+					link.Healthy = true
+				}
+			}(link, wg)
 		}
 	}
+
+	wg.Wait()
 }

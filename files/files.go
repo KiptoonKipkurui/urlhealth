@@ -10,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 
 	"github.com/kiptoonkipkurui/urlhealth/processing"
 )
@@ -61,6 +62,7 @@ type Link struct {
 	Url     string
 	Alias   string
 	Healthy bool
+	Lock    *sync.Mutex
 }
 
 //

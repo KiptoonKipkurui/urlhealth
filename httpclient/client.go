@@ -7,12 +7,15 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"sync"
 )
 
 //
 // Get makes a http call and returns if any error is encountered
 //
-func Get(url string) error {
+func Get(url string, wg *sync.WaitGroup) error {
+
+	defer wg.Done()
 
 	// make http call
 
